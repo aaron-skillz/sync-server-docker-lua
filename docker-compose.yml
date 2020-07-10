@@ -1,7 +1,7 @@
 version: '3'
 services:
   nakama:
-    image: skillzint/nakama:latest
+    image: skillzint/nakama:0.3.0
     entrypoint:
       - "/bin/sh"
       - "-ecx"
