@@ -34,6 +34,9 @@ function M.match_leave(context, dispatcher, tick, state, presences)
 end
 
 function M.match_loop(context, dispatcher, tick, state, messages)
+  -- list of clients to send data to that doesn't include the sender
+  local msgTargets = {}
+
   for _, presence in pairs(state.presences) do
     print(string.format("Presence %s named %s", presence.user_id, presence.username))
   end
@@ -44,8 +47,15 @@ function M.match_loop(context, dispatcher, tick, state, messages)
       print(string.format("Message key %s contains value %s", k, v))
     end
     -- PONG message back to sender
---    dispatcher.broadcast_message(1, message.data, {message.sender})
-    dispatcher.broadcast_message(1, message.data)
+    -- dispatcher.broadcast_message(1, message.data, {message.sender})
+    -- dispatcher.broadcast_message(1, message.data)
+    for _, presence in pairs(state.presences) do
+      if message.sender.user_id ~= presence.user_id then
+        table.insert(msgTargets, presence)
+        print(string.format("Added %s to targets", presence.user_id))
+      end
+    end
+    dispatcher.broadcast_message(1, message.data, msgTargets)
   end
   return state
 end
