@@ -21,7 +21,8 @@ local function create_match(context, payload)
   local params = {
     skillz_match_id = decoded.match_id,
     debug = true,
-    label = "skillz-match-sync"
+    label = "skillz-match-sync",
+    maxPlayers = 2
   }
 
 -- use module match.lua
