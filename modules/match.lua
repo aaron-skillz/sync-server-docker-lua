@@ -35,6 +35,8 @@ end
 function M.match_leave(context, dispatcher, tick, state, presences)
   for _, presence in ipairs(presences) do
     nk.logger_debug(string.format("Match Leave: %s", presence.user_id))
+    state.numPlayers = state.numPlayers - 1
+    nk.logger_debug(string.format("Number of players in match: %s", state.numPlayers))
     state.presences[presence.session_id] = nil
   end
   return state
