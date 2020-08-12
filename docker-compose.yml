@@ -1,7 +1,7 @@
 version: '3'
 services:
   nakama:
-    image: skillzint/nakama:0.5.0
+    image: skillzint/nakama:0.6.0
     entrypoint:
       - "/bin/sh"
       - "-ecx"
@@ -11,14 +11,14 @@ services:
 #    links:
 #    depends_on:
 #      - prometheus
-    volumes:
-      - ./:/nakama/data
+    # volumes:
+    #   - ./:/nakama/data
     expose:
       - "7349"
       - "7350"
 #      - "9100"
     ports:
-      - "7349:7349"
+      # - "7349:7349"
       - "7350:7350"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7350/"]
