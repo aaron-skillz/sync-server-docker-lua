@@ -81,7 +81,7 @@ function M.match_loop(context, dispatcher, tick, state, messages)
       end
     end
     if table.getn(msgTargets) > 0 then
-      dispatcher.broadcast_message(2, message.data, msgTargets)
+      dispatcher.broadcast_message(message.op_code, message.data, msgTargets)
     end
   end
   return state
@@ -89,7 +89,7 @@ end
 
 function M.match_terminate(context, dispatcher, tick, state, grace_seconds)
   local message = "Server shutting down in " .. grace_seconds .. " seconds"
-  dispatcher.broadcast_message(2, message)
+  dispatcher.broadcast_message(1, message)
   return nil
 end
 
