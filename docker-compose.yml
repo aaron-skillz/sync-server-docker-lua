@@ -6,7 +6,7 @@ services:
       - "/bin/sh"
       - "-ecx"
       - >
-          exec /nakama/nakama --name nakama1 --logger.level DEBUG --session.token_expiry_sec 7200
+          exec /nakama/nakama --name nakama1 --logger.level DEBUG --session.token_expiry_sec 7200 --socket.max_message_size_bytes 8192
     restart: "no"
 #    links:
 #    depends_on:
