@@ -42,6 +42,10 @@ function M.match_leave(context, dispatcher, tick, state, presences)
   return state
 end
 
+local function isNotEmpty(s)
+  return s ~= nil and s ~= ''
+end
+
 function M.match_loop(context, dispatcher, tick, state, messages)
   -- Messages format:
   -- {
@@ -57,8 +61,6 @@ function M.match_loop(context, dispatcher, tick, state, messages)
   --   },
   --   ...
   -- }
-
-
   -- list of clients to send data to that doesn't include the sender
   local msgTargets = {}
   -- for _, presence in pairs(state.presences) do
@@ -67,21 +69,26 @@ function M.match_loop(context, dispatcher, tick, state, messages)
   for _, message in ipairs(messages) do
     nk.logger_debug(string.format("Received %s from %s (%s) (opcode=%s)", message.data, message.sender.username, 
       message.sender.user_id, message.op_code))
-    local decoded = nk.json_decode(message.data)
-    -- for k, v in pairs(decoded) do
-    --   nk.logger_debug(string.format("Message key %s contains value %s", k, v))
-    -- end
-    -- PONG message back to sender
-    -- dispatcher.broadcast_message(1, message.data, {message.sender})
-    -- dispatcher.broadcast_message(1, message.data)
-    for _, presence in pairs(state.presences) do
-      if message.sender.user_id ~= presence.user_id then
-        table.insert(msgTargets, presence)
-        nk.logger_debug(string.format("Added %s to targets", presence.user_id))
+
+    if isNotEmpty(message.data) then
+ 
+      local decoded = nk.json_decode(message.data)
+      -- for k, v in pairs(decoded) do
+      --   nk.logger_debug(string.format("Message key %s contains value %s", k, v))
+      -- end
+      -- PONG message back to sender
+      -- dispatcher.broadcast_message(1, message.data, {message.sender})
+      -- dispatcher.broadcast_message(1, message.data)
+      for _, presence in pairs(state.presences) do
+        if message.sender.user_id ~= presence.user_id then
+          table.insert(msgTargets, presence)
+          nk.logger_debug(string.format("Added %s to targets", presence.user_id))
+        end
       end
-    end
-    if table.getn(msgTargets) > 0 then
-      dispatcher.broadcast_message(message.op_code, message.data, msgTargets)
+      if table.getn(msgTargets) > 0 then
+        dispatcher.broadcast_message(message.op_code, message.data, msgTargets)
+      end
+
     end
   end
   return state
