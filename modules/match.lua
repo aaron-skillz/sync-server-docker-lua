@@ -67,18 +67,12 @@ function M.match_loop(context, dispatcher, tick, state, messages)
   --   nk.logger_debug(string.format("Presence %s named %s", presence.user_id, presence.username))
   -- end
   for _, message in ipairs(messages) do
-    nk.logger_debug(string.format("Received %s from %s (%s) (opcode=%s)", message.data, message.sender.username, 
-      message.sender.user_id, message.op_code))
+    nk.logger_debug(string.format("Received from sender(%s:%s)  %s (%s) (opcode=%s)(%s)", message.sender.username, 
+      message.sender.user_id, message.op_code, message.data))
 
     if isNotEmpty(message.data) then
       local decoded = nk.json_decode(message.data)
     end
-      -- for k, v in pairs(decoded) do
-      --   nk.logger_debug(string.format("Message key %s contains value %s", k, v))
-      -- end
-      -- PONG message back to sender
-      -- dispatcher.broadcast_message(1, message.data, {message.sender})
-      -- dispatcher.broadcast_message(1, message.data)
     for _, presence in pairs(state.presences) do
       if message.sender.user_id ~= presence.user_id then
             table.insert(msgTargets, presence)
@@ -88,7 +82,10 @@ function M.match_loop(context, dispatcher, tick, state, messages)
     if table.getn(msgTargets) > 0 then
       dispatcher.broadcast_message(message.op_code, message.data, msgTargets)
     end
-
+    if message.op_code == -1 then
+      nk.logger_debug("End match op_code, sending notification")
+      return nil
+    end
   end
   return state
 end
