@@ -67,7 +67,7 @@ function M.match_loop(context, dispatcher, tick, state, messages)
   --   nk.logger_debug(string.format("Presence %s named %s", presence.user_id, presence.username))
   -- end
   for _, message in ipairs(messages) do
-    nk.logger_debug(string.format("Received from sender(%s:%s)  %s (%s) (opcode=%s)(%s)", message.sender.username, 
+    nk.logger_debug(string.format("Received from sender(%s:%s)(opcode=%s)(%s)", message.sender.username, 
       message.sender.user_id, message.op_code, message.data))
 
     if isNotEmpty(message.data) then
